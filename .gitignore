@@ -1,2 +1,4 @@
 /client/node_modules
 # ./node_modules
+./dataset
+./dataset1
