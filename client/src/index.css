@@ -1,23 +1,66 @@
+/* General Reset and Font Settings */
 body {
-	margin: 0;
-	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-		'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-		sans-serif;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
+    margin: 0;
+    font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased; /* Smooth fonts on Webkit browsers */
+    -moz-osx-font-smoothing: grayscale;  /* Smooth fonts on macOS */
+    background-color: #f5f2f2; /* Dark background for a modern look */
+    color: #E0E0E0; /* Light text for contrast */
 }
 
+/* Code Block Styling */
 code {
-	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-		monospace;
+    font-family: 'Source Code Pro', Menlo, Monaco, Consolas, 'Courier New', monospace;
+    background-color: #f4f0f0; /* Dark background for code blocks */
+    color: #131211; /* Gold color for code text */
+    padding: 4px 8px; /* Padding for better readability */
+    border-radius: 4px; /* Slight rounding of corners */
 }
 
+/* Dropzone Styles */
 .MuiDropzoneArea-root {
-	background-color: transparent !important;
-}
-.MuiDropzoneArea-text, .MuiDropzoneArea-icon {
-  color: white !important;
-  text-shadow: 1.5px 1.5px #800000;
+    background-color: rgba(250, 247, 247, 0.986) !important; /* Slightly transparent background */
+    border: 2px dashed rgba(255, 255, 255, 0.5); /* Modern dashed border */
+    /* border-radius: 80px; Rounded corners for a softer look */
+    /*width: 100px;
+    height: 50px;*/
+    transition: background-color 0.3s, border-color 0.3s; /* Smooth transitions */
 }
 
-/* ifunanyaScript */
+
+.MuiDropzoneArea-root:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* Slightly darker on hover */
+    border-color: rgba(255, 255, 255, 0.8); /* Brighter border on hover */
+}
+
+.MuiDropzoneArea-text, 
+.MuiDropzoneArea-icon {
+    color: #111111 !important; /* White text/icon color */
+    text-shadow: 1.5px 1.5px rgba(228, 221, 221, 0.7); /* Subtle text shadow */
+}
+
+/* Additional Styling for Modern Look */
+h1, h2, h3, h4, h5, h6 {
+    color: #11110f; /* Highlight color for headings */
+    margin-bottom: 0.5em; /* Space below headings */
+}
+
+p {
+    line-height: 1.6; /* Increased line height for readability */
+    margin-bottom: 1em; /* Space below paragraphs */
+}
+
+button {
+    background-color: #FF5722; /* Modern button color */
+    color: white; /* White text for buttons */
+    border: none; /* Remove default border */
+    /*border-radius: 4px; /* Rounded corners */
+    padding: 10px 20px; /* Padding for button */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth background color transition */
+}
+
+button:hover {
+    background-color: #E64A19; /* Darker shade on hover */
+}
+
