@@ -18,7 +18,10 @@ import google.generativeai as genai
 import os
 from pydantic import BaseModel
 
-
+#email push notification lib
+import smtplib
+from email.mime.text import MIMEText
+import datetime as dt
 app = FastAPI()
 
 
@@ -54,36 +57,97 @@ safety_settings = [
 
 system_prompts = [
     """
-    You are a domain expert in medical image analysis. You are tasked with 
-    examining medical images for a renowned hospital.
-    Your expertise will help in identifying or 
-    discovering any anomalies, diseases, conditions or
-    any health issues that might be present in the image.
-    
-    Your key responsibilities:
-    1. Detailed Analysis : Scrutinize and thoroughly examine each image, 
-    focusing on finding any abnormalities.
-    2. Analysis Report : Document all the findings and 
-    clearly articulate them in a structured format.
-    3. Recommendations : Basis the analysis, suggest remedies, 
-    tests or treatments as applicable.
-    4. Treatments : If applicable, lay out detailed treatments 
-    which can help in faster recovery.
-    
-    Important Notes to remember:
-    1. Scope of response : Only respond if the image pertains to 
-    human health issues.
-    2. Clarity of image : In case the image is unclear, 
-    note that certain aspects are 
-    'Unable to be correctly determined based on the uploaded image'
-    3. Disclaimer : Accompany your analysis with the disclaimer: 
-    "Consult with a Doctor before making any decisions."
-    4. Your insights are invaluable in guiding clinical decisions. 
-    Please proceed with the analysis, adhering to the 
-    structured approach outlined above.
-    
-    Please provide the final response with these 4 headings : 
-    Detailed Analysis, Analysis Report, Recommendations and Treatments
+    Medical Image Analysis Expert Prompt
+You are a specialized medical image analyst with expertise in clinical diagnostics and patient care. Your role is to provide comprehensive medical analysis by integrating visual image data with patient information.
+Be Accurate give proper estimation of tumour size be specific about the location of the tumour and the type of tumour. you are being used under a condition that doctor would rediagnose even after your report.
+Inside Patient Demographics you have already given the classified class of the vgg16 model which you can use to cross verify the results by analysis with image and this.
+Available Information:
+
+Medical Image
+Patient Demographics:
+Classification Class 
+Name
+Age
+Gender
+Medications (if provided)
+Symptoms (if provided)
+
+Your Responsibilities:
+
+Comprehensive Analysis
+
+Examine the medical image thoroughly
+Correlate visual findings with patient demographics
+Validate and elaborate on the AI classification result
+Consider provided symptoms and medications in your analysis
+
+
+Detailed Report Generation
+Structure your response with the following sections:
+a) Detailed Analysis
+
+Describe visual observations from the image
+Correlate findings with patient's age and gender
+Discuss relevance of provided symptoms and medications
+Validate or expand upon the AI-classified condition
+
+b) Analysis Report
+
+Summarize key findings
+Explain the significance of the AI classification in context
+Note any age or gender-specific considerations
+Discuss how current medications might impact the condition
+
+c) Recommendations
+
+Suggest appropriate follow-up tests or examinations
+Recommend lifestyle modifications if applicable
+Propose medication adjustments if relevant
+Indicate urgency level for medical consultation
+
+d) Treatments
+
+Outline potential treatment options
+Consider age-appropriate treatment modifications
+Address potential drug interactions with current medications
+Suggest supportive care measures
+
+
+Critical Considerations
+
+Maintain a professional, clinical tone
+Use medical terminology appropriately
+Consider age and gender-specific health factors
+Account for provided medications and symptoms in your analysis
+
+
+Important Guidelines
+
+Scope: Respond only to human health-related images
+Image Clarity: Note if any aspects are unclear
+Accuracy: Rely on the AI classification as a validated starting point
+Comprehensiveness: Integrate all provided patient information
+
+
+
+Required Disclaimers:
+
+"This analysis is based on the provided image and patient information, combined with AI classification results."
+"This report is for informational purposes and should be reviewed by a qualified healthcare professional."
+"Final diagnosis and treatment decisions should be made by a licensed medical practitioner."
+"Consult with a Doctor before making any medical decisions."
+
+Report Structure:
+
+Patient Information Summary
+AI Classification Result
+Detailed Analysis
+Analysis Report
+Recommendations
+Treatments
+Disclaimers
+
+Remember: Your analysis should be thorough, professional, and clinically relevant, integrating all provided information to support medical decision-making while acknowledging the limitations of image-based analysis.
     """
 ]
 
@@ -155,12 +219,12 @@ app.add_middleware(
 )
 
 # MongoDB setup
-client = MongoClient("mongodb://localhost:27017")
+client = MongoClient("mongodb+srv://vaishnavidhimate:13Db7cK5v4FGABXi@gen-ai-hackathon.zqoif.mongodb.net/")
 db = client["cancer_detection"]
 patients_collection = db["patients"]
 
 # Load the trained model and set the labels
-MODEL = tf.keras.models.load_model(r"../saved_models2/pretrained/1")
+MODEL = tf.keras.models.load_model(r"C:\Users\ganes\Desktop\GenAI App\Brain_tumour\Brain_tumour\saved_models2\model.h5")
 LABELS = ['No Tumour', 'Tumour']
 
 
@@ -215,6 +279,16 @@ async def classify(
     _, encoded_image = cv2.imencode('.jpg', image)  # Encode OpenCV image to jpg format
     image_bytes = encoded_image.tobytes()  # Convert encoded image to bytes
 
+     # Model prediction for image classification
+    try:
+        # Prediction using the classification model
+        prediction = MODEL.predict(image_batch)  # Replace with your model's prediction method
+        predicted_label = LABELS[np.argmax(prediction[0])]  # Get label based on max probability
+        timestamp=dt.datetime.now()
+        confidence = float(np.max(prediction[0]))  # Get max probability as confidence
+    except Exception as e:
+        return {"error": f"Error in model prediction: {str(e)}"}
+
     # Prepare the image and prompt for content generation
     image_parts_clasify = [
         {
@@ -224,7 +298,7 @@ async def classify(
     ]
 
     patient_promt = [
-        f"Patient Details:\nPatient Name: {name}\nAge: {age}\nGender: {gender}\nMedications: {medications}\nSymptoms: {symptoms}\n",
+        f"Patient Details:\nClassification Class : {predicted_label} \nPatient Name: {name}\nAge: {age}\nGender: {gender}\nMedications: {medications}\nSymptoms: {symptoms}\n",
     ]
     
     prompt_parts_clasify = [
@@ -233,22 +307,60 @@ async def classify(
         patient_promt[0]
     ]
 
-    # Model prediction for image classification
-    try:
-        # Prediction using the classification model
-        prediction = MODEL.predict(image_batch)  # Replace with your model's prediction method
-        predicted_label = LABELS[np.argmax(prediction[0])]  # Get label based on max probability
-        confidence = float(np.max(prediction[0]))  # Get max probability as confidence
-    except Exception as e:
-        return {"error": f"Error in model prediction: {str(e)}"}
-
+   
     # Generate content using the generative model
     try:
         response_clasify = model.generate_content(prompt_parts_clasify)
         analysis_report_text_clasify = response_clasify.text if response_clasify else "No analysis available."
         patients_collection.insert_one({"name": name, "age": age, "gender": gender, "medications": medications, "symptoms": symptoms,"report":analysis_report_text_clasify})
+        #email push notification function
+
+        def email_script(rep):
+            sender_email = "7738491466sk@gmail.com"
+            app_password = "vpwe nran aeny uizj"
+
+            # Create the email message
+            msg = MIMEText(rep)
+            msg['Subject'] = "URGENT: Critical Cancer Detection Alert - Immediate Action Required"
+            msg['From'] = "AI Cancer Detection System"
+            msg['To'] = "ganeshangcp@gmail.com"
+
+            # Connect to Gmail's SMTP server
+            with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp_server:
+                smtp_server.login(sender_email, app_password)
+                smtp_server.send_message(msg)
+
+            print("Email sent successfully!")
+
+        if (predicted_label == 'Tumour'):
+            rep = f'''
+        Dear Doctor,
+
+        This is an automated alert from the AI-powered Cancer Detection System.
+
+        Patient Details:
+        - Name: {name}
+        - Age: {age}
+        - Gender: {gender}
+
+        Detection Summary:
+        - Classification: {predicted_label}
+        - Confidence Level: {confidence*100}
+        - Detection Date/Time: {timestamp}
+
+        Please access the full report and imaging on our portal.
+
+        This is an automated alert. Please verify all findings according to standard protocols.
+
+        Regards,
+        AI Cancer Detection System.
+        '''
+            email_script(rep)
     except Exception as e:
         return {"error": f"Error generating analysis report: {str(e)}"}
+
+
+
 
     # Return the classification results along with the analysis report
     return {
@@ -274,6 +386,9 @@ async def get_all_patients():
     # Serialize each patient document
     serialized_patients = [serialize_patient(patient) for patient in patients]
     return serialized_patients
+
+
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
