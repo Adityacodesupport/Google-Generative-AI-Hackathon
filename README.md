@@ -8,15 +8,16 @@
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 ## 📜 Table of Contents
-- [About the Project](#about-the-project)
+- [About the Project](#-about-the-project)
 - [Features](#-features)
 - [Demo](#-demo)
+- [Live Demo](#-livedemo)
 - [Technology Stack](#-technology-stack)
 - [Getting Started](#-getting-started)
-  - [Prerequisites](#-prerequisites)
-  - [Installation](#-installation)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
 - [Usage](#-usage)
-- [Project Structure](#-project-structure)
+- [Project Structure](#-project-structure-for-relevant-files)
 - [Future Enhancements](#-future-enhancements)
 - [Contributing](#-contributing)
 - [License](#-license)
@@ -47,6 +48,11 @@ Brain Tumor Diagnosis is an innovative web application designed to assist in the
 - **PDF Report Generation**: Download and share medical reports in PDF format.
 - **Patient Record Management**: Maintain and access patient records efficiently.
 - **Instant Doctor Alerts**: Automatic email notifications to doctors upon tumor detection.
+
+##  🌐 Live Demo
+
+Experience our Brain Tumor Diagnosis tool in action:
+[![Live Demo](https://img.shields.io/badge/LIVE_DEMO-Visit_Website-FF5722?style=for-the-badge)](http://54.197.15.179:3000/)
 
 ## 🎬 Demo
 
@@ -97,7 +103,7 @@ Here's a glimpse of our application in action:
   </tr>
 </table>
 
-## 🚀 Getting Started
+## 🚀 Project Setup
 
 ### Prerequisites
 
@@ -167,16 +173,6 @@ brain-tumor-diagnosis/
 - Enhance the AI model to support multiple types of brain scans
 - Develop a mobile application for on-the-go access
 
-## 🤝 Contributing
-
-Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
 ## 📄 License
 
 Distributed under the MIT License. See `LICENSE` for more information.
@@ -184,8 +180,9 @@ Distributed under the MIT License. See `LICENSE` for more information.
 ## 📞 Contact
 
 Team Name : Envision 3.0
+
 Team Members :
-1.  Aditya Khatode - aditya.khatode.pibythree.com
+1.  Aditya Khatode - aditya.khatode@pibythree.com
 2.  Ganeshan Arumuganainar - ganeshan.nainar@pibythree.com
 3.  Kaliraj Konar - kaliraj.konar@pibythree.com
 4.  Vaishnavi Dhimate - vaishnavi.dhimate@pibythree.com
