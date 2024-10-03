@@ -1,41 +1,42 @@
-from fastapi import FastAPI, UploadFile, File, Request, Body
-from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
-import tensorflow as tf
-import numpy as np
-from io import BytesIO
-from PIL import Image
-import cv2
-from pymongo import MongoClient
-from pydantic import BaseModel
-from typing import Optional
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-import google.generativeai as genai
-import os
-from pydantic import BaseModel
-
-#email push notification lib
-import smtplib
-from email.mime.text import MIMEText
-import datetime as dt
+# Import necessary libraries and modules
+from fastapi import FastAPI, UploadFile, File, Request, Body  # FastAPI essentials for handling HTTP requests and file uploads
+from fastapi.middleware.cors import CORSMiddleware  # Middleware to enable CORS (Cross-Origin Resource Sharing)
+import uvicorn  # For running the FastAPI server
+import tensorflow as tf  # TensorFlow for machine learning model handling
+import numpy as np  # Numpy for numerical computations
+from io import BytesIO  # To handle byte streams (image data)
+from PIL import Image  # Image processing using PIL
+import cv2  # OpenCV for image processing
+from pymongo import MongoClient  # MongoDB for database interactions
+from pydantic import BaseModel  # Pydantic for data validation
+from typing import Optional  # To handle optional fields in models
+from reportlab.lib.pagesizes import letter  # For PDF generation
+from reportlab.pdfgen import canvas  # Canvas to draw PDF
+from reportlab.lib import colors  # For text colors in PDFs
+from reportlab.lib.styles import getSampleStyleSheet  # Styles for PDF text formatting
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer  # ReportLab classes for document creation
+import google.generativeai as genai  # Google Gemini API for generative AI
+import os  # OS module to handle environment variables
+import smtplib  # Email sending via SMTP
+from email.mime.text import MIMEText  # To format the email body
+import datetime as dt  # For timestamp in notifications
+from dotenv import load_dotenv
+# Initialize the FastAPI app
 app = FastAPI()
+load_dotenv()
+# Google Gemini API configuration (API key is retrieved from the environment variable)
+os.environ['GOOGLE_API_KEY'] = os.getenv("GOOGLE_API_KEY")
+genai.configure(api_key=os.environ['GOOGLE_API_KEY'])  # Configure the Gemini API with the provided key
 
-
-# Google Gemini API configuration
-os.environ['GOOGLE_API_KEY'] = "AIzaSyBM_I5M5d51BnnbQ4-XLoJ8i3bCOrA1i0E"
-genai.configure(api_key=os.environ['GOOGLE_API_KEY'])
-
+# Set generation configuration for the generative model (temperature, top_p, etc.)
 generation_config = {
     "temperature": 1,
     "top_p": 0.95,
     "top_k": 0,
-    "max_output_tokens": 8192,
+    "max_output_tokens": 8192,  # Set max tokens to allow large responses
 }
 
+# Safety settings to ensure content generated is appropriate
 safety_settings = [
     {
         "category": "HARM_CATEGORY_HARASSMENT",
@@ -55,6 +56,7 @@ safety_settings = [
     },
 ]
 
+# System prompt for guiding the generative AI to perform medical analysis
 system_prompts = [
     """
     Medical Image Analysis Expert Prompt
@@ -151,10 +153,12 @@ Remember: Your analysis should be thorough, professional, and clinically relevan
     """
 ]
 
+# Instantiate the generative model
 model = genai.GenerativeModel(model_name="gemini-1.5-flash-latest",
                               generation_config=generation_config,
                               safety_settings=safety_settings)
 
+# Route for image analysis using the Gemini AI model
 @app.post("/api/analyze")
 async def analyze_image(file: UploadFile = File(...)):
     global analysis_report_text
@@ -177,6 +181,7 @@ async def analyze_image(file: UploadFile = File(...)):
     
     return {"report": analysis_report_text}
 
+# Route to generate and download the analysis report as a PDF
 @app.get("/api/report/pdf")
 async def get_report_pdf():
     global analysis_report_text
@@ -218,8 +223,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# MongoDB setup
-client = MongoClient("mongodb+srv://vaishnavidhimate:13Db7cK5v4FGABXi@gen-ai-hackathon.zqoif.mongodb.net/")
+# MongoDB setup to store patient data
+client = MongoClient(os.getenv("MONGO_URI"))
 db = client["cancer_detection"]
 patients_collection = db["patients"]
 
@@ -227,7 +232,7 @@ patients_collection = db["patients"]
 MODEL = tf.keras.models.load_model(r"C:\Users\ganes\Desktop\GenAI App\Brain_tumour\Brain_tumour\saved_models2\model.h5")
 LABELS = ['No Tumour', 'Tumour']
 
-
+# Data model for storing patient information
 class PatientData(BaseModel):
     id: Optional[str]
     name: str
@@ -237,12 +242,13 @@ class PatientData(BaseModel):
     symptoms: Optional[str] = None
     report: Optional[str] = None
 
+# Utility function to convert bytes to an image
 def bytes_to_image(bytes_data: bytes) -> np.ndarray:
     """Convert byte stream to image."""
     image = Image.open(BytesIO(bytes_data)).convert("RGB")
     return np.array(image)
 
-
+# Route for classifying the medical image and generating a report
 @app.post("/classify")
 async def classify(
     name: str = Body(...),
@@ -316,14 +322,14 @@ async def classify(
         #email push notification function
 
         def email_script(rep):
-            sender_email = "7738491466sk@gmail.com"
-            app_password = "vpwe nran aeny uizj"
+            sender_email = os.getenv("EMAIL_USER")
+            app_password = os.getenv("EMAIL_PASSWORD")
 
             # Create the email message
             msg = MIMEText(rep)
             msg['Subject'] = "URGENT: Critical Cancer Detection Alert - Immediate Action Required"
             msg['From'] = "AI Cancer Detection System"
-            msg['To'] = "ganeshangcp@gmail.com"
+            msg['To'] = os.getenv("DOCTOR_EMAIL")
 
             # Connect to Gmail's SMTP server
             with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp_server:
@@ -380,6 +386,7 @@ def serialize_patient(patient):
     patient["_id"] = str(patient["_id"])  # Convert ObjectId to string
     return patient
 
+
 @app.get("/patient")
 async def get_all_patients():
     patients = list(patients_collection.find())
@@ -389,6 +396,6 @@ async def get_all_patients():
 
 
 
-
+# Main entry point for running the FastAPI server on port 8000
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
