@@ -3,9 +3,8 @@
 > "Mind the Tumor: Catching Brain Bumps Before They Bump You!"
 
 [![Devfolio](https://img.shields.io/badge/Devfolio-GenAI_Hackathon-blue)](https://devfolio.co)
-[![Google Cloud](https://img.shields.io/badge/Sponsored_by-Google-4285F4?logo=google-cloud)](https://cloud.google.com/)
+[![Google Cloud](https://img.shields.io/badge/Used-Gemini-Models-By-Google-4285F4?logo=google-cloud)](https://cloud.google.com/)
 [![AWS](https://img.shields.io/badge/Deployed_on-AWS-232F3E?logo=amazon-aws)](https://aws.amazon.com/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 ## 📜 Table of Contents
 - [About the Project](#-about-the-project)
