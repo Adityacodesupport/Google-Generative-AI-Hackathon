@@ -51,13 +51,14 @@ Brain Tumor Diagnosis is an innovative web application designed to assist in the
 ##  🌐 Live Demo
 
 Experience our Brain Tumor Diagnosis tool in action:
+
 [![Live Demo](https://img.shields.io/badge/LIVE_DEMO-Visit_Website-FF5722?style=for-the-badge)](http://54.197.15.179:3000/)
 
 ## 🎬 Demo
 
 Check out our project demo video:
 
-[![Project Demo](https://img.shields.io/badge/Watch-Demo_Video-red?style=for-the-badge&logo=youtube)](https://drive.google.com/your-video-link-here)
+[![Project Demo](https://img.shields.io/badge/Watch-Demo_Video-red?style=for-the-badge&logo=youtube)]([https://drive.google.com/your-video-link-here](https://drive.google.com/file/d/1yOogRvFUUJPaCwesDb4zGiG1h9q5J2y2/view?usp=sharing))
 
 ## 📸 Screenshots
 
