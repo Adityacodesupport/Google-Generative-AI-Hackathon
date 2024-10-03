@@ -58,7 +58,7 @@ Experience our Brain Tumor Diagnosis tool in action:
 
 Check out our project demo video:
 
-[![Project Demo](https://img.shields.io/badge/Watch-Demo_Video-red?style=for-the-badge&logo=youtube)]((https://drive.google.com/file/d/1yOogRvFUUJPaCwesDb4zGiG1h9q5J2y2/view?usp=sharing))
+[![Project Demo](https://img.shields.io/badge/Watch-Demo_Video-red?style=for-the-badge&logo=youtube)](https://drive.google.com/file/d/1yOogRvFUUJPaCwesDb4zGiG1h9q5J2y2/view?usp=sharing)
 
 ## 📸 Screenshots
 
