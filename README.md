@@ -65,27 +65,27 @@ Check out our project demo video:
 Here's a glimpse of our application in action:
 
 <div align="center">
-  <img src="path_to_screenshot1.png" alt="Homepage" width="45%">
-  <img src="path_to_screenshot2.png" alt="MRI Upload" width="45%">
+  <img src="Website Images/Home Page.png" alt="Homepage" width="45%">
+  <img src="Website Images/MRI upload.png" alt="MRI Upload" width="45%">
 </div>
 
 <div align="center">
-  <img src="path_to_screenshot3.png" alt="Patient Form" width="45%">
-  <img src="path_to_screenshot4.png" alt="Analysis Result" width="45%">
+  <img src="Website Images/Upload UI.png" alt="Patient Form" width="45%">
+  <img src="Website Images/Download PDF.png" alt="Analysis Result" width="45%">
 </div>
 
 <div align="center">
-  <img src="path_to_screenshot5.png" alt="Medical Report" width="45%">
-  <img src="path_to_screenshot6.png" alt="Patient List" width="45%">
+  <img src="Website Images/Download PDF 2.png" alt="Medical Report" width="45%">
+  <img src="Website Images/Download PDF 3.png" alt="Patient List" width="45%">
 </div>
 
 <div align="center">
-  <img src="path_to_screenshot7.png" alt="PDF Download" width="45%">
-  <img src="path_to_screenshot8.png" alt="Doctor Notification" width="45%">
+  <img src="Website Images/Patients List 1.png" alt="PDF Download" width="45%">
+  <img src="Website Images/Patients List 2.png" alt="Doctor Notification" width="45%">
 </div>
 
 <div align="center">
-  <img src="path_to_screenshot9.png" alt="Mobile View" width="30%">
+  <img src="Website Images/Mail Alert.png" alt="Mobile View" width="30%">
 </div>
 
 ## 🛠 Technology Stack
