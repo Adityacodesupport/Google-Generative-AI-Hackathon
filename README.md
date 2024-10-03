@@ -13,6 +13,7 @@
 - [Demo](#-demo)
 - [Live Demo](#-live-demo)
 - [Technology Stack](#-technology-stack)
+- [Architecture Design](#-architecture-design)
 - [Project Setup](#-project-setup)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
@@ -98,6 +99,14 @@ Here's a glimpse of our application in action:
     <td align="center"><img src="https://img.shields.io/badge/-AWS_EC2-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white" alt="AWS EC2"></td>
   </tr>
 </table>
+
+## 💻 Architecture Design
+
+This is our System Architecture:
+
+<div align="center">
+  <img src="Website Images/Architecture design.png" alt="Arch Design" width="70%">
+</div>
 
 ## 🚀 Project Setup
 
